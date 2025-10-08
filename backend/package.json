@@ -10,9 +10,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "body": "^5.1.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "mongoose": "^8.19.1",
+    "parser": "^0.1.4",
     "shortid": "^2.2.17",
     "valid-url": "^1.0.9"
   }
