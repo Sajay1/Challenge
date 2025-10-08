@@ -1,8 +1,9 @@
 const express = require('express')
 const mongoose  = require('mongoose')
 const cors = require('cors')
-const shortURL = require('shorturl')
+const shortURL = require('shortid')
 const validURL = require('valid-url')
+const { isValid } = require('shortid')
 
 const app = express()
 app.use(cors())
@@ -18,20 +19,31 @@ const urlSchema = mongoose.Schema(
     shortenURL:{
         type:String,
         required:true,
-        default:
+        default:shortURL.generate,
     },
-    clicks:{}
+    clicks:{
+     type:Number,
+     default:0
+    },
 }
 )
 
+const PORT = process.env.PORT || 5000
 
-app.get('/shorten',async(req,res)=>{
+
+
+app.post('/shorten',async(req,res)=>{
+    var {longURL} = req.body
+    if(!validURL.isUri(longURL)){
+       return res.status(500).json("NOT VALID")
+    }
 
 })
 
-app.post(':/shortCode',async(req,res)=>{
+app.get(':/shortCode',async(req,res)=>{
 
 })
 
+console.log(`Server ruuning on PORT ${PORT}`)
 
-module.exports = app
+module.exports = app()
