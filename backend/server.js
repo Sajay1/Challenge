@@ -11,12 +11,16 @@ mongoose.connect("mongodb://localhost:27017/challenge")
 
 const urlSchema = mongoose.Schema(
     {
-    {
-        
+    ogURL:{
+        type:String,
+        required:true
     },
-    {
-
+    shortenURL:{
+        type:String,
+        required:true,
+        default:
     },
+    clicks:{}
 }
 )
 
