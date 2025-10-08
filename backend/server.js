@@ -3,7 +3,6 @@ const mongoose  = require('mongoose')
 const cors = require('cors')
 const shortURL = require('shortid')
 const validURL = require('valid-url')
-const { isValid } = require('shortid')
 
 const app = express()
 app.use(cors())
