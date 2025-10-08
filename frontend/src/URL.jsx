@@ -1,54 +1,85 @@
-import React,{useState,useEffect} from "react";
+import React, { useState } from "react";
+import {
+  Box, Input, Button, Text, Tooltip
+} from "@chakra-ui/react";
 import axios from "axios";
-import {Box,Flex} from "@chakra-ui/react";
 
-export default function URL(){
+const API_BASE_URL = "http://localhost:5000/api";
 
-    const [ogURL,setogURL] = useState('')
-    const [shortCode,setshortCode] = useState('')
-    const [error,setError] = useState('')
-    const [loading, setLoading] = useState(false);
+export default function URLShortener() {
+  const [ogURL, setOgURL] = useState("");
+  const [shortCode, setShortCode] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setShortUrl('');
+    setError("");
+    setShortCode("");
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/shorten`, {
-        ogURL: ogURL.trim(),
-      });
-
-      // Construct the full short URL (in production, this would be your domain)
-      const fullShortUrl = `http://localhost:5000/${response.data.shortCode}`;
-      setshortCode(fullShortUrl);
-      setogURL('');
+      const res = await axios.post(`${API_BASE_URL}/shorten`, { ogURL: ogURL.trim() });
+      setShortCode(res.data.shortCode);
+      setOgURL("");
     } catch (err) {
-      setError(err.response?.data?.error || 'An error occurred');
+      setError(err.response?.data?.error || "An error occurred");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleShortUrlClick = () => {
-    if (shortUrl) {
-      window.open(shortUrl, '_blank');
-    }
+  const openShortURL = (shortCode) => {
+    if (!shortCode) return;
+    window.open(`http://localhost:5000/api/${shortCode}`, "_blank"); 
   };
 
+  return (
+    <Box
+      display="flex"
+      flexDir="column"
+      alignItems="center"
+      justifyContent="center"
+      p={5}
+      bg="gray.900"
+      color="white"
+      minH="100vh"
+    >
+      <Text fontSize="3xl" mb={4} fontWeight="bold">URL Shortener</Text>
 
-    return(
-        <>
-        <Box>
-            <Text>SHORTEN URL</Text>
+      <form onSubmit={handleSubmit}>
+        <Input
+          placeholder="Enter long URL"
+          value={ogURL}
+          onChange={(e) => setOgURL(e.target.value)}
+          width="400px"
+          mb={3}
+          bg="gray.800"
+          border="1px solid gray"
+          required
+        />
+        <Button type="submit" colorScheme="teal" isLoading={loading} disabled={!ogURL.trim()}>
+          Shorten URL
+        </Button>
+      </form>
+
+      {shortCode && (
+        <Box mt={4} textAlign="center">
+          <Text>Shortened URL:</Text>
+          <Tooltip label="Click to open the shortened URL">
+            <Text
+              color="teal.300"
+              cursor="pointer"
+              textDecoration="underline"
+              onClick={() => openShortURL(shortCode)}
+            >
+              {`http://localhost:5000/api/${shortCode}`}
+            </Text>
+          </Tooltip>
         </Box>
-        <Box>
-            <form onSubmit={handleSubmit}>
-            <Input name="url" placeholder="Enter the URL" onChange={(e)=>setogURL(e.target.value)} value={ogURL} required></Input>
-            <Button type="button" >Submit</Button>
-            </form>
-        </Box>
-        </>
-    )
+      )}
+
+      {error && <Text color="red.400" mt={3}>{error}</Text>}
+    </Box>
+  );
 }

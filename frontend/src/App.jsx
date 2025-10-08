@@ -1,13 +1,12 @@
 import { useState } from 'react'
-import URL from './URL'
+import URL from './URL.jsx'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
 
 return(
   <URL/>
 )
 
 }
-export default App
+
