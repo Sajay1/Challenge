@@ -79,6 +79,7 @@ app.get('/api/:shortCode',async(req,res)=>{
     url.clicks += 1;
     await url.save();
 
+    res.redirect(url.ogURL);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });
